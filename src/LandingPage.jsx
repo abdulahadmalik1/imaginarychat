@@ -26,7 +26,7 @@ export default function AIFunTeaser() {
 
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/verify-beta-pin', {
+      const response = await axios.post('/api/verify-beta-pin', {
         pin: pin.trim()
       });
 
