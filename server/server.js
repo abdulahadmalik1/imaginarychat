@@ -37,20 +37,13 @@ const betaPinSchema = new mongoose.Schema({
 
 const BetaPin = mongoose.model('BetaPin', betaPinSchema);
 
-// Initialize default pin if it doesn't exist
-const initializeDefaultPin = async () => {
+// No initialization needed - pins are managed directly in MongoDB
+const checkDatabaseConnection = async () => {
   try {
-    const existingPin = await BetaPin.findOne({ pin: process.env.BETA_SECRET_PIN });
-    if (!existingPin) {
-      const defaultPin = new BetaPin({
-        pin: process.env.BETA_SECRET_PIN,
-        isActive: true
-      });
-      await defaultPin.save();
-      console.log('Default beta pin initialized');
-    }
+    const pinCount = await BetaPin.countDocuments();
+    console.log(`MongoDB connected - ${pinCount} beta pins in database`);
   } catch (error) {
-    console.error('Error initializing default pin:', error);
+    console.error('Error checking database:', error);
   }
 };
 
@@ -84,5 +77,5 @@ app.get('/api/health', (req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  initializeDefaultPin();
+  checkDatabaseConnection();
 });
